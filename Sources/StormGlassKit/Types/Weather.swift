@@ -9,43 +9,21 @@ import Foundation
 import CoreLocation
 
 public struct Weather: Decodable {
-    public var hours: [Hour]
-    public var meta: Metadata
+    public var periods: [WeatherPeriod]
+    public var metadata: Metadata
+    
+    public init(periods: [WeatherPeriod], metadata: Weather.Metadata) {
+        self.periods = periods
+        self.metadata = metadata
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case periods = "hours"
+        case metadata = "meta"
+    }
 }
 
 extension Weather {
-    public struct Hour: Decodable {
-        public var time: Date
-        public var data: [WeatherQueryParameter: [WeatherDataSource: Double]]
-        
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            let timestamp = try container.decode(String.self, forKey: .time)
-            let formatter = ISO8601DateFormatter()
-            guard let date = formatter.date(from: timestamp) else {
-                throw DecodingError.dataCorruptedError(forKey: .time, in: container, debugDescription: "\(timestamp) is not a valid ISO formatted date string")
-            }
-            time = date
-            let dataContainer = try decoder.container(keyedBy: WeatherQueryParameter.self)
-            var dataSets: [WeatherQueryParameter: [WeatherDataSource: Double]] = [:]
-            for key in WeatherQueryParameter.allCases {
-                // For some reason decoding directly to `WeatherDataSource` doesn't work...
-                guard let dataSet = try? dataContainer.decode([String: Double].self, forKey: key) else { continue }
-                var sourcedDate: [WeatherDataSource: Double] = [:]
-                for (sourceKey, value) in dataSet {
-                    guard let source = WeatherDataSource(rawValue: sourceKey) else { continue }
-                    sourcedDate[source] = value
-                }
-                dataSets[key] = sourcedDate
-            }
-            data = dataSets
-        }
-        
-        enum CodingKeys: String, CodingKey {
-            case time
-        }
-    }
-    
     public struct Metadata: Decodable {
         public var cost: Double
         public var dailyQuota: Int

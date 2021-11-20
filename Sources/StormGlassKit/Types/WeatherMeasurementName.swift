@@ -1,15 +1,13 @@
 //
-//  WeatherQueryParameter.swift
+//  WeatherMeasurementName.swift
 //  StormGlassKit
 //
-//  Created by Caleb Friden on 6/13/21.
+//  Created by Caleb Friden on 11/19/21.
 //
 
 import Foundation
 
-public enum WeatherQueryParameter: String, CaseIterable, Decodable, CodingKey {
-    /// Timestamp in UTC
-    case time
+public enum WeatherMeasurementName {
     /// Air temperature in degrees celsius
     case airTemperature
     /// Air temperature at 80m above sea level in degrees celsius
@@ -117,10 +115,9 @@ public enum WeatherQueryParameter: String, CaseIterable, Decodable, CodingKey {
     /// Speed of wind at 200hpa in meters per second.
     case windSpeed200hpa
     
-    /// The associated measurement that this query parameter produces, if any.
-    public var measurementName: WeatherMeasurementName? {
+    /// The associated query parameter that produces this measurement.
+    public var queryParameter: WeatherQueryParameter {
         switch self {
-        case .time: return nil
         case .airTemperature: return .airTemperature
         case .airTemperature80m: return .airTemperature80m
         case .airTemperature100m: return .airTemperature100m
@@ -174,6 +171,33 @@ public enum WeatherQueryParameter: String, CaseIterable, Decodable, CodingKey {
         case .windSpeed800hpa: return .windSpeed800hpa
         case .windSpeed500hpa: return .windSpeed500hpa
         case .windSpeed200hpa: return .windSpeed200hpa
+        }
+    }
+    
+    /// The unit in which the query parameter is measured, if any.
+    public var measurementUnit: Unit? {
+        switch self {
+        case .humidity, .iceCover, .precipitation: return nil
+        case .airTemperature, .airTemperature80m, .airTemperature100m, .airTemperature1000hpa,
+                .airTemperature800hpa, .airTemperature500hpa, .airTemperature200hpa, .waterTemperature:
+            return UnitTemperature.celsius
+        case .pressure: return UnitPressure.hectopascals
+        case .cloudCover: return nil
+        case .currentDirection, .swellDirection, .secondarySwellDirection, .waveDirection,
+                .windWaveDirection, .windDirection, .windDirection20m, .windDirection30m,
+                .windDirection40m, .windDirection50m, .windDirection80m, .windDirection100m,
+                .windDirection1000hpa, .windDirection800hpa, .windDirection500hpa, .windDirection200hpa:
+            return UnitAngle.degrees
+        case .currentSpeed, .gust, .windSpeed, .windSpeed20m,
+                .windSpeed30m, .windSpeed40m, .windSpeed50m, .windSpeed80m,
+                .windSpeed100m, .windSpeed1000hpa, .windSpeed800hpa, .windSpeed500hpa,
+                .windSpeed200hpa:
+            return UnitSpeed.metersPerSecond
+        case .snowDepth, .seaLevel, .swellHeight, .secondarySwellHeight,
+                .waveHeight, .windWaveHeight:
+            return UnitLength.meters
+        case .swellPeriod, .secondarySwellPeriod, .wavePeriod, .windWavePeriod: return UnitDuration.seconds
+        case .visibility: return UnitLength.kilometers
         }
     }
 }

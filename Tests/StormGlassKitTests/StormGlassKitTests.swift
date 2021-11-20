@@ -11,20 +11,20 @@ final class StormGlassKitTests: XCTestCase {
         XCTAssertTrue(metadata.sources.contains(.noaa))
     }
     
-    func testHourDecoding() throws {
-        let hour = try JSONDecoder().decode(Weather.Hour.self, from: hourData)
-        XCTAssertEqual(hour.time, Date(timeIntervalSince1970: 1623650400))
-        XCTAssertEqual(hour.data.count, 7)
-        XCTAssertEqual(hour.data[.swellHeight]?[.noaa], 0.26)
-        XCTAssertEqual(hour.data[.waterTemperature]?[.stormGlass], 25.55)
-        XCTAssertNil(hour.data[.waterTemperature]?[.noaa])
+    func testWeatherPeriodDecoding() throws {
+        let period = try JSONDecoder().decode(WeatherPeriod.self, from: periodData)
+        XCTAssertEqual(period.time, Date(timeIntervalSince1970: 1623650400))
+        XCTAssertEqual(period.data.count, 7)
+        XCTAssertEqual(period.data[.swellHeight]?[.noaa], 0.26)
+        XCTAssertEqual(period.data[.waterTemperature]?[.stormGlass], 25.55)
+        XCTAssertNil(period.data[.waterTemperature]?[.noaa])
     }
     
     func testWeatherDecoding() throws {
         let weather = try JSONDecoder().decode(Weather.self, from: weatherData)
-        XCTAssertEqual(weather.hours.count, 2)
-        XCTAssertEqual(weather.hours.first?.data[.waveHeight]?[.noaa], 0.56)
-        XCTAssertEqual(weather.meta.cost, 1)
+        XCTAssertEqual(weather.periods.count, 2)
+        XCTAssertEqual(weather.periods.first?.data[.waveHeight]?[.noaa], 0.56)
+        XCTAssertEqual(weather.metadata.cost, 1)
     }
     
     private let metaData: Data = """
@@ -53,7 +53,7 @@ final class StormGlassKitTests: XCTestCase {
     }
     """.data(using: .utf8)!
     
-    private let hourData: Data = """
+    private let periodData: Data = """
     {
         "airTemperature": {
             "noaa": 23.59

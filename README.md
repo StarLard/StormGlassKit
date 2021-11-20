@@ -1,6 +1,10 @@
 # StormGlassKit
 A pure Swift SDK for consuming the official [StormGlass API](https://docs.stormglass.io)
 
+## Note
+
+Currently only the Global & Marine Weather APIs are supported.
+
 ## Installation
 
 StormGlassKit is available through [Swift Package Manager](https://swift.org/package-manager/), a dependency manager built into Xcode.
