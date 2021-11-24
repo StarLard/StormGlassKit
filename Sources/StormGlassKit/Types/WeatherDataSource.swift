@@ -10,6 +10,8 @@ import Foundation
 public enum WeatherDataSource: String, CaseIterable, Decodable {
     /// Germany’s National Meteorological Service, the Deutscher Wetterdienst
     case icon
+    /// Germany’s National Meteorological Service, the Deutscher Wetterdienst
+    case dwd
     /// The National Oceanic and Atmospheric Administration
     case noaa
     /// French National Meteorological service
