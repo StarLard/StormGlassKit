@@ -174,8 +174,8 @@ public enum WeatherMeasurementName {
         }
     }
     
-    /// The unit in which the query parameter is measured, if any.
-    public var measurementUnit: Unit? {
+    /// The dimension in which the query parameter is measured, if any.
+    public var dimension: Dimension? {
         switch self {
         case .humidity, .iceCover, .precipitation: return nil
         case .airTemperature, .airTemperature80m, .airTemperature100m, .airTemperature1000hpa,
