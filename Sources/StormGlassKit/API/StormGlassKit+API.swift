@@ -80,9 +80,12 @@ public struct StormGlassKitNetworkError: CustomNSError {
     public var underlyingError: Error?
             
     public var errorUserInfo: [String: Any] {
-        var info: [String: Any] = ["status": status, "statusMessage": statusMessage, "message": message]
+        var info: [String: Any] = ["status": status, "status message": statusMessage, "message": message]
         if let request = request {
             info["request"] = request
+        }
+        if let underlyingError = underlyingError {
+            info["underlying error"] = underlyingError
         }
         return info
     }
