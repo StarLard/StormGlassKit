@@ -28,7 +28,7 @@ extension Weather {
         public var cost: Double
         public var dailyQuota: Int
         public var parameters: Set<WeatherMeasurementName>
-        public var sources: Set<WeatherDataSource>
+        public var sources: Set<WeatherDataSource>?
         public var requestCount: Int
         public var start: String
         public var end: String
@@ -42,7 +42,7 @@ extension Weather {
             cost = try container.decode(Double.self, forKey: .cost)
             dailyQuota = try container.decode(Int.self, forKey: .dailyQuota)
             parameters = try container.decode(Set<WeatherMeasurementName>.self, forKey: .params)
-            sources = try container.decode(Set<WeatherDataSource>.self, forKey: .source)
+            sources = try container.decodeIfPresent(Set<WeatherDataSource>.self, forKey: .source)
             requestCount = try container.decode(Int.self, forKey: .requestCount)
             start = try container.decode(String.self, forKey: .start)
             end = try container.decode(String.self, forKey: .end)
