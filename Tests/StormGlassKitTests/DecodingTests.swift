@@ -1,7 +1,14 @@
+//
+//  DecodingTests.swift
+//  StormGlassKit
+//
+//  Created by Caleb Friden on 12/4/21.
+//
+
 import XCTest
 @testable import StormGlassKit
 
-final class StormGlassKitTests: XCTestCase {
+final class DecodingTests: XCTestCase {
     func testMetadataDecoding() throws {
         let metadata = try JSONDecoder().decode(Weather.Metadata.self, from: metaData)
         XCTAssertEqual(metadata.cost, 1)

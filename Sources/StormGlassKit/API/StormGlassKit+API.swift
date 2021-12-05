@@ -56,8 +56,8 @@ public extension StormGlassKit {
 // MARK: Private
 
 /// An error thrown when problems occur with one of the APIs.
-private struct NetworkingError: CustomNSError, Decodable {
-    public static let errorDomain: String = "StormGlassKit.NetworkingError"
+private struct StormGlassNetworkError: CustomNSError, Decodable {
+    public static let errorDomain: String = "StormGlassKit.StormGlassNetworkError"
     
     static var noResponse: Self {
         Self(status: 204, statusMessage: "Bad Response", message: "The API response was empty.")
@@ -80,12 +80,12 @@ private struct NetworkingError: CustomNSError, Decodable {
     }
 }
 
-private extension StormGlassKit {
+internal extension StormGlassKit {
     static func urlComponents(apiEndpoint: String, queryItems: [URLQueryItem]) -> URLComponents {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.stormglass.io"
-        components.path = "v2/\(apiEndpoint)"
+        components.path = "/v2/\(apiEndpoint)"
         components.queryItems = queryItems
         return components
     }
@@ -108,7 +108,7 @@ private extension StormGlassKit {
             queryItems.append(URLQueryItem(name: "source", value: sources.map(\.rawValue).joined(separator: ",")))
         }
         let components = urlComponents(apiEndpoint: "weather/point", queryItems: queryItems)
-        guard let url = components.url else { throw NetworkingError.invalidRequest(components.description) }
+        guard let url = components.url else { throw StormGlassNetworkError.invalidRequest(components.description) }
         var request: URLRequest = URLRequest(url: url)
         request.setValue(configuration.apiKey, forHTTPHeaderField: "Authorization")
         return request
@@ -131,12 +131,12 @@ private extension URLSession.DataTaskPublisher {
 
 private func handleDataResponse<Coder>(decoder: Coder, data: Data, response: URLResponse) throws -> Data where Coder: TopLevelDecoder, Coder.Input == Data {
     guard let response = response as? HTTPURLResponse else {
-        throw NetworkingError.noResponse
+        throw StormGlassNetworkError.noResponse
     }
     guard response.statusCode == 200 else {
-        throw NetworkingError.invalidStatus(response.statusCode)
+        throw StormGlassNetworkError.invalidStatus(response.statusCode)
     }
-    if let underlyingError = try? decoder.decode(NetworkingError.self, from: data) {
+    if let underlyingError = try? decoder.decode(StormGlassNetworkError.self, from: data) {
         throw underlyingError
     }
     return data
