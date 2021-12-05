@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum WeatherMeasurementName {
+public enum WeatherMeasurementName: String, CaseIterable, Decodable, CodingKey {
     /// Air temperature in degrees celsius
     case airTemperature
     /// Air temperature at 80m above sea level in degrees celsius
@@ -114,65 +114,6 @@ public enum WeatherMeasurementName {
     case windSpeed500hpa
     /// Speed of wind at 200hpa in meters per second.
     case windSpeed200hpa
-    
-    /// The associated query parameter that produces this measurement.
-    public var queryParameter: WeatherQueryParameter {
-        switch self {
-        case .airTemperature: return .airTemperature
-        case .airTemperature80m: return .airTemperature80m
-        case .airTemperature100m: return .airTemperature100m
-        case .airTemperature1000hpa: return .airTemperature1000hpa
-        case .airTemperature800hpa: return .airTemperature800hpa
-        case .airTemperature500hpa: return .airTemperature500hpa
-        case .airTemperature200hpa: return .airTemperature200hpa
-        case .pressure: return .pressure
-        case .cloudCover: return .cloudCover
-        case .currentDirection: return .currentDirection
-        case .currentSpeed: return .currentSpeed
-        case .gust: return .gust
-        case .humidity: return .humidity
-        case .iceCover: return .iceCover
-        case .precipitation: return .precipitation
-        case .snowDepth: return .snowDepth
-        case .seaLevel: return .seaLevel
-        case .swellDirection: return .swellDirection
-        case .swellHeight: return .swellHeight
-        case .swellPeriod: return .swellPeriod
-        case .secondarySwellPeriod: return .secondarySwellPeriod
-        case .secondarySwellDirection: return .secondarySwellDirection
-        case .secondarySwellHeight: return .secondarySwellHeight
-        case .visibility: return .visibility
-        case .waterTemperature: return .waterTemperature
-        case .waveDirection: return .waveDirection
-        case .waveHeight: return .waveHeight
-        case .wavePeriod: return .wavePeriod
-        case .windWaveDirection: return .windWaveDirection
-        case .windWaveHeight: return .windWaveHeight
-        case .windWavePeriod: return .windWavePeriod
-        case .windDirection: return .windDirection
-        case .windDirection20m: return .windDirection20m
-        case .windDirection30m: return .windDirection30m
-        case .windDirection40m: return .windDirection40m
-        case .windDirection50m: return .windDirection50m
-        case .windDirection80m: return .windDirection80m
-        case .windDirection100m: return .windDirection100m
-        case .windDirection1000hpa: return .windDirection1000hpa
-        case .windDirection800hpa: return .windDirection800hpa
-        case .windDirection500hpa: return .windDirection500hpa
-        case .windDirection200hpa: return .windDirection200hpa
-        case .windSpeed: return .windSpeed
-        case .windSpeed20m: return .windSpeed20m
-        case .windSpeed30m: return .windSpeed30m
-        case .windSpeed40m: return .windSpeed40m
-        case .windSpeed50m: return .windSpeed50m
-        case .windSpeed80m: return .windSpeed80m
-        case .windSpeed100m: return .windSpeed100m
-        case .windSpeed1000hpa: return .windSpeed1000hpa
-        case .windSpeed800hpa: return .windSpeed800hpa
-        case .windSpeed500hpa: return .windSpeed500hpa
-        case .windSpeed200hpa: return .windSpeed200hpa
-        }
-    }
     
     /// The dimension in which the query parameter is measured, if any.
     public var dimension: Dimension? {

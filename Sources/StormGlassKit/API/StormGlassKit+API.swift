@@ -22,7 +22,7 @@ public extension StormGlassKit {
                                     start: Date?, end: Date?, sources: Set<WeatherDataSource>?,
                                     session: URLSession = .shared, decoder: Coder) -> AnyPublisher<Weather, Error> where Coder: TopLevelDecoder, Coder.Input == Data {
         do {
-            let request = try weatherURLRequest(coordinate: coordinate, parameters: Set(measurements.map(\.queryParameter)),
+            let request = try weatherURLRequest(coordinate: coordinate, parameters: measurements.map(\.rawValue),
                                                 start: start, end: end, sources: sources)
             return session.dataTaskPublisher(for: request)
                 .tryExtractData(decoder: decoder, request: request)
@@ -47,7 +47,7 @@ public extension StormGlassKit {
     static func fetchWeather<Coder>(coordinate: CLLocationCoordinate2D, measurements: Set<WeatherMeasurementName>,
                                     start: Date?, end: Date?, sources: Set<WeatherDataSource>?,
                                     session: URLSession = .shared, decoder: Coder) async throws -> Weather where Coder: TopLevelDecoder, Coder.Input == Data {
-        let request = try weatherURLRequest(coordinate: coordinate, parameters: Set(measurements.map(\.queryParameter)),
+        let request = try weatherURLRequest(coordinate: coordinate, parameters: measurements.map(\.rawValue),
                                             start: start, end: end, sources: sources)
         let dataResponse = try await session.data(for: request)
         let data = try handleDataResponse(decoder: decoder, data: dataResponse.0, response: dataResponse.1, request: request)
@@ -109,13 +109,13 @@ internal extension StormGlassKit {
         return components
     }
     
-    static func weatherURLRequest(coordinate: CLLocationCoordinate2D, parameters: Set<WeatherQueryParameter>,
+    static func weatherURLRequest(coordinate: CLLocationCoordinate2D, parameters: [String],
                                   start: Date?, end: Date?, sources: Set<WeatherDataSource>?) throws -> URLRequest {
         assert(!parameters.isEmpty, "API expects at least one parameter")
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "lat", value: coordinate.latitude),
             URLQueryItem(name: "lng", value: coordinate.longitude),
-            URLQueryItem(name: "params", value: parameters.map(\.rawValue).joined(separator: ",")),
+            URLQueryItem(name: "params", value: parameters.joined(separator: ",")),
         ]
         if let start = start {
             queryItems.append(URLQueryItem(name: "start", value: start.timeIntervalSince1970))
