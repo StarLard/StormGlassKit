@@ -58,7 +58,7 @@ public extension StormGlassKit {
 // MARK: Private
 
 /// An error thrown when problems occur with one of the APIs.
-private struct StormGlassNetworkError: CustomNSError {
+public struct StormGlassKitNetworkError: CustomNSError {
     public static let errorDomain: String = "StormGlassKit.StormGlassNetworkError"
     
     static func noResponse(for request: URLRequest) -> Self {
@@ -70,13 +70,14 @@ private struct StormGlassNetworkError: CustomNSError {
     }
     
     static func invalidRequest(reason: String) -> Self {
-        Self(status: 400, statusMessage: "Invalid Request", message: "The request was not valid for reason: \(reason)", request: nil)
+        Self(status: 400, statusMessage: "Invalid Request", message: "The request was not valid for reason: \(reason)")
     }
     
     public let status: Int
     public let statusMessage: String
     public let message: String
     public var request: URLRequest?
+    public var underlyingError: Error?
             
     public var errorUserInfo: [String: Any] {
         var info: [String: Any] = ["status": status, "statusMessage": statusMessage, "message": message]
@@ -87,16 +88,10 @@ private struct StormGlassNetworkError: CustomNSError {
     }
 }
 
-extension StormGlassNetworkError: Decodable {
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let errors = try container.decode([String: String].self, forKey: .errors)
-        self = .invalidRequest(reason: "Errors: \(errors)")
-    }
+public struct StormGlassAPIError: CustomNSError, Decodable {
+    public static let errorDomain: String = "StormGlassKit.StormGlassNetworkError.APIError"
     
-    private enum CodingKeys: String, CodingKey {
-        case errors
-    }
+    var errors: [String: [String]]
 }
 
 internal extension StormGlassKit {
@@ -127,7 +122,7 @@ internal extension StormGlassKit {
             queryItems.append(URLQueryItem(name: "source", value: sources.map(\.rawValue).joined(separator: ",")))
         }
         let components = urlComponents(apiEndpoint: "weather/point", queryItems: queryItems)
-        guard let url = components.url else { throw StormGlassNetworkError.invalidRequest(reason: "Invalid URL components: \(components.description)") }
+        guard let url = components.url else { throw StormGlassKitNetworkError.invalidRequest(reason: "Invalid URL components: \(components.description)") }
         var request: URLRequest = URLRequest(url: url)
         request.setValue(configuration.apiKey, forHTTPHeaderField: "Authorization")
         return request
@@ -149,14 +144,16 @@ private extension URLSession.DataTaskPublisher {
 }
 
 private func handleDataResponse<Coder>(decoder: Coder, data: Data, response: URLResponse, request: URLRequest) throws -> Data where Coder: TopLevelDecoder, Coder.Input == Data {
+    let underlyingError = try? decoder.decode(StormGlassAPIError.self, from: data)
     guard let response = response as? HTTPURLResponse else {
-        throw StormGlassNetworkError.noResponse(for: request)
+        var error = StormGlassKitNetworkError.noResponse(for: request)
+        error.underlyingError = underlyingError
+        throw error
     }
     guard response.statusCode == 200 else {
-        throw StormGlassNetworkError.invalidStatus(response.statusCode, request: request)
-    }
-    if let underlyingError = try? decoder.decode(StormGlassNetworkError.self, from: data) {
-        throw underlyingError
+        var error = StormGlassKitNetworkError.invalidStatus(response.statusCode, request: request)
+        error.underlyingError = underlyingError
+        throw error
     }
     return data
 }

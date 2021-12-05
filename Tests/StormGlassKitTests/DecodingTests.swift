@@ -34,6 +34,11 @@ final class DecodingTests: XCTestCase {
         XCTAssertEqual(weather.metadata.cost, 1)
     }
     
+    func testAPIErrorDecoding() throws {
+        let error = try JSONDecoder().decode(StormGlassAPIError.self, from: errorData)
+        XCTAssertEqual(error.errors, ["params": ["time not valid. Should be one of: waterTemperature"]])
+    }
+    
     private let metaData: Data = """
     {
         "cost": 1,
@@ -161,6 +166,16 @@ final class DecodingTests: XCTestCase {
                 "noaa"
             ],
             "start": "2021-06-14 06:00"
+        }
+    }
+    """.data(using: .utf8)!
+    
+    let errorData = """
+    {
+        "errors": {
+            "params": [
+                "time not valid. Should be one of: waterTemperature"
+            ]
         }
     }
     """.data(using: .utf8)!
