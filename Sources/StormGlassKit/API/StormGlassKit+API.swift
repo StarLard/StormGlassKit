@@ -35,6 +35,7 @@ public extension StormGlassKit {
 }
 
 @available(iOS 15.0, *)
+@available(macOS 12.0, *)
 public extension StormGlassKit {
     static func fetchWeather(coordinate: CLLocationCoordinate2D, measurements: Set<WeatherMeasurementName>,
                              start: Date?, end: Date?, sources: Set<WeatherDataSource>?,

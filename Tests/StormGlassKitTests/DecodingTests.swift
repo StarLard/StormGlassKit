@@ -15,7 +15,7 @@ final class DecodingTests: XCTestCase {
         XCTAssertEqual(metadata.requestCount, 6)
         XCTAssertEqual(metadata.start, "2021-06-14 06:00")
         XCTAssertTrue(metadata.parameters.contains(.swellHeight))
-        XCTAssertTrue(metadata.sources.contains(.noaa))
+        XCTAssertEqual(metadata.sources?.contains(.noaa), true)
     }
     
     func testWeatherPeriodDecoding() throws {
