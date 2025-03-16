@@ -112,9 +112,6 @@ internal extension StormGlassKit {
         if let sources = sources, !sources.isEmpty {
             queryItems.append(URLQueryItem(name: "source", value: sources.map(\.rawValue).joined(separator: ",")))
         }
-        queryItems.sort { lhs, rhs in
-            lhs.name < rhs.name
-        }
         let components = urlComponents(apiEndpoint: "weather/point", queryItems: queryItems)
         guard let url = components.url else { throw StormGlassKitNetworkError.invalidRequest(reason: "Invalid URL components: \(components.description)") }
         var request: URLRequest = URLRequest(url: url)
