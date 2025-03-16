@@ -8,7 +8,7 @@
 import Foundation
 import CoreLocation
 
-public struct Weather: Decodable {
+public struct Weather: Decodable, Sendable, Hashable {
     public var periods: [WeatherPeriod]
     public var metadata: Metadata
     
@@ -24,7 +24,7 @@ public struct Weather: Decodable {
 }
 
 extension Weather {
-    public struct Metadata: Decodable {
+    public struct Metadata: Decodable, Sendable, Hashable {
         public var cost: Double
         public var dailyQuota: Int
         public var parameters: Set<WeatherMeasurementName>
@@ -32,13 +32,14 @@ extension Weather {
         public var requestCount: Int
         public var start: String
         public var end: String
-        public var coordinate: CLLocationCoordinate2D
-        
+        public var latitude: CLLocationDegrees
+        public var longitude: CLLocationDegrees
+        public var coordinate: CLLocationCoordinate2D { CLLocationCoordinate2D(latitude: latitude, longitude: longitude) }
+
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            let lat = try container.decode(CLLocationDegrees.self, forKey: .lat)
-            let lng = try container.decode(CLLocationDegrees.self, forKey: .lng)
-            coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+            latitude = try container.decode(CLLocationDegrees.self, forKey: .lat)
+            longitude = try container.decode(CLLocationDegrees.self, forKey: .lng)
             cost = try container.decode(Double.self, forKey: .cost)
             dailyQuota = try container.decode(Int.self, forKey: .dailyQuota)
             parameters = try container.decode(Set<WeatherMeasurementName>.self, forKey: .params)

@@ -8,7 +8,7 @@
 import Foundation
 import os.log
 
-public struct WeatherPeriod: Decodable {
+public struct WeatherPeriod: Decodable, Sendable, Hashable {
     public var time: Date
     public var data: [WeatherMeasurementName: [WeatherDataSource: Double]]
     

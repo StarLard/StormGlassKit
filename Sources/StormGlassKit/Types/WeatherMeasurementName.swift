@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum WeatherMeasurementName: String, CaseIterable, Decodable, CodingKey {
+public enum WeatherMeasurementName: String, CaseIterable, Decodable, CodingKey, Sendable, Hashable {
     /// Air temperature in degrees celsius
     case airTemperature
     /// Air temperature at 80m above sea level in degrees celsius

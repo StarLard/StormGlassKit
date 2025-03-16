@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum WeatherDataSource: String, CaseIterable, Decodable {
+public enum WeatherDataSource: String, CaseIterable, Decodable, Sendable, Hashable {
     /// Germany’s National Meteorological Service, the Deutscher Wetterdienst
     case icon
     /// Germany’s National Meteorological Service, the Deutscher Wetterdienst
