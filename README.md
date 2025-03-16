@@ -1,4 +1,9 @@
 # StormGlassKit
+
+[![SwiftPM compatible](https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat)](https://swift.org/package-manager)
+[![Swift Package Index](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FStarLard%2FStormGlassKit%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/StarLard/StormGlassKit)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/StarLard/StormGlassKit/blob/main/LICENSE)
+
 A pure Swift SDK for consuming the official [StormGlass API](https://docs.stormglass.io)
 
 ## Note
