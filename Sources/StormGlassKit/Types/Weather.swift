@@ -11,12 +11,12 @@ import CoreLocation
 public struct Weather: Decodable, Sendable, Hashable {
     public var periods: [WeatherPeriod]
     public var metadata: Metadata
-    
+
     public init(periods: [WeatherPeriod], metadata: Weather.Metadata) {
         self.periods = periods
         self.metadata = metadata
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case periods = "hours"
         case metadata = "meta"
@@ -38,17 +38,41 @@ extension Weather {
 
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            latitude = try container.decode(CLLocationDegrees.self, forKey: .lat)
-            longitude = try container.decode(CLLocationDegrees.self, forKey: .lng)
-            cost = try container.decode(Double.self, forKey: .cost)
-            dailyQuota = try container.decode(Int.self, forKey: .dailyQuota)
-            parameters = try container.decode(Set<WeatherMeasurementName>.self, forKey: .params)
-            sources = try container.decodeIfPresent(Set<WeatherDataSource>.self, forKey: .source)
-            requestCount = try container.decode(Int.self, forKey: .requestCount)
-            start = try container.decode(String.self, forKey: .start)
-            end = try container.decode(String.self, forKey: .end)
+            self.init(
+                cost: try container.decode(Double.self, forKey: .cost),
+                dailyQuota: try container.decode(Int.self, forKey: .dailyQuota),
+                parameters: try container.decode(Set<WeatherMeasurementName>.self, forKey: .params),
+                sources: try container.decodeIfPresent(Set<WeatherDataSource>.self, forKey: .source),
+                requestCount: try container.decode(Int.self, forKey: .requestCount),
+                start: try container.decode(String.self, forKey: .start),
+                end: try container.decode(String.self, forKey: .end),
+                latitude: try container.decode(CLLocationDegrees.self, forKey: .lat),
+                longitude: try container.decode(CLLocationDegrees.self, forKey: .lng)
+            )
         }
-        
+
+        public init(
+            cost: Double,
+            dailyQuota: Int,
+            parameters: Set<WeatherMeasurementName>,
+            sources: Set<WeatherDataSource>? = nil,
+            requestCount: Int,
+            start: String,
+            end: String,
+            latitude: CLLocationDegrees,
+            longitude: CLLocationDegrees
+        ) {
+            self.cost = cost
+            self.dailyQuota = dailyQuota
+            self.parameters = parameters
+            self.sources = sources
+            self.requestCount = requestCount
+            self.start = start
+            self.end = end
+            self.latitude = latitude
+            self.longitude = longitude
+        }
+
         enum CodingKeys: String, CodingKey {
             case lat
             case lng
