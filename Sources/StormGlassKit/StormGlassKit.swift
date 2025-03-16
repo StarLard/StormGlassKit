@@ -11,7 +11,8 @@ import os.log
 /// Interfaces with Storm Glass API
 public final class StormGlassKit {
     // MARK: Public
-    
+
+    @MainActor
     public static var configuration: Configuration {
         guard let config = shared.configuration else {
             fatalError("`StormGlassKit.configure()` must be called at app launch.")
@@ -19,7 +20,7 @@ public final class StormGlassKit {
         return config
     }
     
-    public struct Configuration {
+    public struct Configuration: Sendable {
         public let apiKey: String
         
         public init?(bundle: Bundle) {
@@ -47,7 +48,7 @@ public final class StormGlassKit {
     /// step fails. This method should be called after the app is launched and
     /// before using StormGlassKit services. This method is not thread safe and must
     /// be called on the main thread.
-    public static func configure() {
+    @MainActor public static func configure() {
         guard let configurationDictionary = shared.defaultConfigurationDictionary() else {
             preconditionFailure("""
                 StormGlassKit could not find\n" a valid \(Configuration.fileName).\(Configuration.fileType)\n
@@ -65,7 +66,7 @@ public final class StormGlassKit {
     /// and before using StormGlassKit services. This method is not thread safe and must
     /// be called on the main thread.
     /// - Parameter configuration: A custom configuration for your app.
-    public static func configure(with configuration: Configuration) {
+    @MainActor public static func configure(with configuration: Configuration) {
         assert(Thread.isMainThread)
         guard shared.configuration == nil else {
             preconditionFailure("StormGlassKit has already been configured. Only call \(#function) once per app launch.")
@@ -75,7 +76,8 @@ public final class StormGlassKit {
     }
     
     // MARK: Internal
-    
+
+    @MainActor
     static let shared = StormGlassKit()
         
     // MARK: Private

@@ -1,11 +1,10 @@
-// swift-tools-version:5.5
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version:6.0
 
 import PackageDescription
 
 let package = Package(
     name: "StormGlassKit",
-    platforms: [ .iOS(.v14), .macOS(.v11), .tvOS(.v14), .watchOS(.v7) ],
+    platforms: [ .iOS(.v15), .macOS(.v12), .tvOS(.v16), .watchOS(.v8) ],
     products: [
         .library(
             name: "StormGlassKit",
@@ -15,9 +14,11 @@ let package = Package(
     targets: [
         .target(
             name: "StormGlassKit",
-            dependencies: []),
+            dependencies: []
+        ),
         .testTarget(
             name: "StormGlassKitTests",
-            dependencies: ["StormGlassKit"]),
+            dependencies: ["StormGlassKit"]
+        ),
     ]
 )

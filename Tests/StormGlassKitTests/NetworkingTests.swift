@@ -27,7 +27,7 @@ final class NetworkingTests: XCTestCase {
                        "https://api.stormglass.io/v2/weather/point?lat=19.594379&lng=-155.971668&params=swellHeight,airTemperature")
     }
     
-    func testRequestURL() throws {
+    @MainActor func testRequestURL() throws {
         let apiKey = "iLikeTurtles"
         let coordinate = CLLocationCoordinate2D(latitude: 19.594379, longitude: -155.971668)
         let measurements: Set<WeatherMeasurementName> = [.swellHeight, .airTemperature]
@@ -35,7 +35,14 @@ final class NetworkingTests: XCTestCase {
         let end = Date(timeIntervalSince1970: 1635847200.0)
         
         StormGlassKit.configure(with: .init(apiKey: apiKey))
-        let request = try StormGlassKit.weatherURLRequest(coordinate: coordinate, parameters: measurements.map(\.rawValue), start: start, end: end, sources: nil)
+        let request = try StormGlassKit.weatherURLRequest(
+            apiKey: apiKey,
+            coordinate: coordinate,
+            parameters: measurements.map(\.rawValue),
+            start: start,
+            end: end,
+            sources: nil
+        )
         XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), apiKey)
     }
 }
