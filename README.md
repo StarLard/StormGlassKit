@@ -22,11 +22,11 @@ To remove the dependency, select the project and open **Swift Packages** (which 
 
 ## Usage
 
-1. In your application's `application(_:didFinishLaunchingWithOptions:)` method, configure `StormGlassKit` using one of the following methods:
+1. In your UIKit application's `application(_:didFinishLaunchingWithOptions:)` method or SwiftUI `App` initializer, configure `StormGlassKit` using one of the following methods:
     * Add a `StormGlassKit-Configuration.plist` file to your project that includes an "API_KEY" key with your API key as the value. You may then
     call `StormGlassKit.configure()`.
     * Create and configure a custom `StormGlassKit.Configuration` and use it to call `StormGlassKit.configure(with:)`.
-2. Get weather forcasts using the `StormGlassKit.fetchWeather(...)` method. StormGlassKit provides APIs for both `Combine` and Swift concurrency's async/await pattern. The returned value will contain a `Weather` type which contains the requested forecast, organized by hour, and the associated meta data.
+2. Get weather forcasts using the `StormGlassKit.fetchWeather(...)` method. StormGlassKit is consumable through Swift Concurrency's async/await pattern. The returned value will contain a `Weather` type which contains the requested forecast, organized by hour, and the associated meta data.
 
 ## Author
 
