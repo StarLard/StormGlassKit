@@ -30,7 +30,7 @@ To remove the dependency, select the project and open **Swift Packages** (which 
 
 ## Author
 
-[@StarLard]([https://twitter.com/CalebFriden](https://bsky.app/profile/starlard.bsky.social))
+[@StarLard](https://bsky.app/profile/starlard.bsky.social)
 
 ## License
 
